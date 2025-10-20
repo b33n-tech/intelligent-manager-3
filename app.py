@@ -21,12 +21,12 @@ new_input = cols[0].text_input("Nouvel élément", key="new_input")
 add_button = cols[1].button("➕ Ajouter")
 
 if add_button and new_input.strip() != "":
+    # Ajout dans éléments initiaux si LLM pas encore rempli, sinon dans actualisations
     if not st.session_state.elements or st.session_state.llm_output == "":
         st.session_state.elements.append(new_input.strip())
     else:
         st.session_state.actualisations.append(new_input.strip())
-    # Reset du texte input (streamlit refresh)
-    st.experimental_rerun()
+    # Pas de st.experimental_rerun() : Streamlit va gérer l'affichage naturellement
 
 # --- Affichage des éléments ---
 st.subheader("Éléments actuels")
