@@ -6,18 +6,18 @@ st.set_page_config(page_title="Intelligent Manager MVP", layout="wide")
 st.title("Intelligent Manager (MVP texte incrémental)")
 st.write("Step 1 : Input des tâches/éléments de travail et génération du prompt LLM")
 
-# Initialisation de la session
+# --- Initialisation de la session ---
 if "elements" not in st.session_state:
-    st.session_state.elements = []  # Liste cumulée des éléments
+    st.session_state.elements = []  # Liste des éléments initiaux
 if "actualisations" not in st.session_state:
-    st.session_state.actualisations = []  # Liste des inputs ajoutés après le premier envoi
+    st.session_state.actualisations = []  # Liste des ajouts post-envoi
 if "llm_output" not in st.session_state:
     st.session_state.llm_output = ""  # Texte collé depuis LLM
 
-# --- Step 1 : Input ---
+# --- Step 1 : Input des éléments ---
 st.subheader("Ajouter de nouveaux éléments / actualisations")
 cols = st.columns([6,1])
-new_input = cols[0].text_input("Nouvel élément", key="input_box")
+new_input = cols[0].text_input("Nouvel élément", key="new_input")
 add_button = cols[1].button("➕ Ajouter")
 
 if add_button and new_input.strip() != "":
@@ -25,9 +25,10 @@ if add_button and new_input.strip() != "":
         st.session_state.elements.append(new_input.strip())
     else:
         st.session_state.actualisations.append(new_input.strip())
-    st.session_state.input_box = ""  # Reset input
+    # Reset du texte input (streamlit refresh)
+    st.experimental_rerun()
 
-# Affichage des éléments
+# --- Affichage des éléments ---
 st.subheader("Éléments actuels")
 with st.expander("Step 1 : éléments initiaux"):
     for idx, el in enumerate(st.session_state.elements, 1):
@@ -60,7 +61,7 @@ update_button = st.button("💾 Mettre à jour LLM")
 if update_button:
     st.session_state.llm_output = llm_input
 
-# --- Section historique / export ---
-st.subheader("Historique")
+# --- Historique / affichage final ---
+st.subheader("Historique / Output complet")
 st.write(f"Date : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 st.text_area("LLM Output cumulatif", st.session_state.llm_output, height=300)
