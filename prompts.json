@@ -5,8 +5,8 @@
     "output_format": "---\nN° sujet : [numéro]\nDescription initiale : [texte brut]\nReformulation : [texte clair et concis]\nSous-actions : [liste détaillée]\nDépendances cachées : [éléments implicites]\nPoints à clarifier : [⚠️ à préciser]\nType : [action / modification / contrainte]\n---"
   },
   "sequencage": {
-    "title": "Séquençage et digestion (Step 2)",
-    "instructions": "À partir des fiches produites à l'étape 1, hiérarchise et optimise toutes les actions et contraintes. Ignore tout résumé ou synthèse. Découpe toutes les actions en micro-actions, de façon à ce qu'elles soient immédiatement exécutables. Prends en compte les modifications et contraintes contextuelles pour réévaluer le plan.\n\nGénère :\n- Liste complète des actions détaillées et micro-actions\n- Actions mises en standby ou modifiées\n- Contraintes contextuelles\n- Jalons clés (points de bascule, livrables)\n- Recommandations d'exécution si nécessaire\n\nSois concis, style log de mission, prêt à copier dans un .txt.",
-    "output_format": "---\n1️⃣ Séquence d'actions micro détaillées :\nN° action / Description / Type (action, modification, contrainte) / Dépendances / Notes\n...\n2️⃣ Jalons clés :\nN° jalon / Description / Actions concernées\n---"
+    "title": "Séquençage micro-micro-micro actions",
+    "instructions": "À partir des fiches Step 1, génère un plan opérationnel ultra détaillé.\n\nRègles :\n1. Chaque action doit être **une seule opération immédiatement exécutable**.\n2. Découpe toutes les sous-actions en étapes micro, pas d’agrégation.\n3. Inclure toutes les dépendances, modifications ou contraintes explicitement.\n4. Pour chaque action :\n   - N° action\n   - Description courte, claire, sans ambiguïté\n   - Type (action / modification / contrainte)\n   - Dépendances précises\n   - Notes / points à clarifier ⚠️ si nécessaire\n5. Fournis également une section Jalons clés avec points de bascule ou livrables.\n6. Style : log de mission, sec, direct, prêt à copier.\n\nNe pas générer de résumé ou synthèse générale, uniquement les micro-actions et jalons.",
+    "output_format": "---\n1️⃣ Actions micro-micro :\nN° action / Description / Type / Dépendances / Notes\n...\n2️⃣ Jalons clés :\nN° jalon / Description / Actions concernées\n---"
   }
 }
