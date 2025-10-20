@@ -1,20 +1,27 @@
 import streamlit as st
+import json
 from datetime import datetime
 
 st.set_page_config(page_title="Intelligent Manager MVP", layout="wide")
-
-st.title("Intelligent Manager (MVP Dump + 2 Prompts)")
-st.write("Interface simple : input continu + prompts automatiques pour LLM")
+st.title("Intelligent Manager (MVP avec Prompts JSON)")
 
 # --- Initialisation de la session ---
 if "elements" not in st.session_state:
-    st.session_state.elements = []  # Liste des éléments initiaux
+    st.session_state.elements = []
 if "actualisations" not in st.session_state:
-    st.session_state.actualisations = []  # Liste des ajouts post-envoi
+    st.session_state.actualisations = []
 if "prepared_output" not in st.session_state:
-    st.session_state.prepared_output = ""  # Texte collé depuis LLM après prompt 1
+    st.session_state.prepared_output = ""
 if "final_output" not in st.session_state:
-    st.session_state.final_output = ""  # Texte collé depuis LLM après prompt 2
+    st.session_state.final_output = ""
+
+# --- Chargement des prompts depuis JSON ---
+def load_prompt(file_path):
+    with open(file_path, "r") as f:
+        return json.load(f)
+
+preparation_prompt = load_prompt("prompts/preparation.json")
+sequencage_prompt = load_prompt("prompts/sequencage.json")
 
 # --- Step 1 : Input des éléments ---
 st.subheader("Ajouter de nouveaux éléments / actualisations")
@@ -39,16 +46,11 @@ if st.session_state.actualisations:
         for idx, el in enumerate(st.session_state.actualisations, 1):
             st.write(f"{idx}. {el}")
 
-# --- Prompt 1 : Préparation des éléments de travail ---
-st.subheader("Prompt 1 : Préparation des éléments de travail")
-prompt1 = "# PROMPT — PRÉPARATION DES ÉLÉMENTS DE TRAVAIL\n"
-prompt1 += "Contexte : Tu es un assistant d’analyse et de préparation de travail. On t’envoie une liste d’éléments bruts : tâches, missions, idées, to-do… Ton rôle est de clarifier, reformuler, et décortiquer chaque sujet pour en faire une base exploitable de travail.\n\n"
-prompt1 += "Objectif : Pour chaque sujet, tu dois produire une fiche de travail concise et opérationnelle, sous la trame suivante :\n---\nN° sujet : [numéro]\nDescription initiale : [copie brute de l’input]\nReformulation : [formule claire, concise]\nSous-actions : [liste séquentielle d’actions]\nDépendances cachées : [éléments implicites, prérequis, ressources]\n---\nContraintes : Ton sec, net, sans émotion. ⚠️ À clarifier si nécessaire.\n\n"
-prompt1 += "Maintenant, traite chaque sujet de la liste ci-dessous :\n\n"
-for idx, el in enumerate(st.session_state.elements + st.session_state.actualisations, 1):
-    prompt1 += f"Sujet {idx} : {el}\n"
-
-st.text_area("Prompt 1 LLM (copypaste pour traitement)", prompt1, height=300)
+# --- Prompt 1 : Préparation des éléments ---
+st.subheader(f"Prompt 1 : {preparation_prompt['title']}")
+elements_text = "\n".join(st.session_state.elements + st.session_state.actualisations)
+prompt1_text = f"{preparation_prompt['instructions']}\n\nÉléments :\n{elements_text}\n\nFormat attendu :\n{preparation_prompt['output_format']}"
+st.text_area("Prompt 1 LLM (copypaste)", prompt1_text, height=300)
 
 # --- Zone pour coller output LLM préparation ---
 st.subheader("Coller le retour LLM (Prompt 1)")
@@ -59,15 +61,9 @@ if update_prepared:
     st.session_state.prepared_output = prepared_input
 
 # --- Prompt 2 : Séquençage et priorisation ---
-st.subheader("Prompt 2 : Séquençage et priorisation")
-prompt2 = "# PROMPT — ANALYSE, SÉQUENÇAGE ET PRIORISATION\n"
-prompt2 += "Contexte : Tu reçois une série de fiches de travail préparées (une par sujet). Ton rôle est de les traiter comme un système d’opérations pour dégager une séquence optimisée.\n\n"
-prompt2 += "Objectif : Hiérarchiser, ordonner et optimiser toutes les actions pour qu’un opérateur humain puisse exécuter la séquence sans hésitation.\n\n"
-prompt2 += "Fiches à traiter :\n"
-prompt2 += st.session_state.prepared_output + "\n\n"
-prompt2 += "Produis l'output selon la trame :\n1️⃣ Synthèse opérationnelle\n2️⃣ Séquençage logique\n3️⃣ Optimisation & simplification\n4️⃣ Jalons clés\n5️⃣ Recommandation d’exécution\n\nConstraints : Lisible, copiable, sans préambule.\n"
-
-st.text_area("Prompt 2 LLM (copypaste pour traitement)", prompt2, height=300)
+st.subheader(f"Prompt 2 : {sequencage_prompt['title']}")
+prompt2_text = f"{sequencage_prompt['instructions']}\n\nFiches à traiter :\n{st.session_state.prepared_output}\n\nFormat attendu :\n{sequencage_prompt['output_format']}"
+st.text_area("Prompt 2 LLM (copypaste)", prompt2_text, height=300)
 
 # --- Zone pour coller output LLM final ---
 st.subheader("Coller le retour LLM (Prompt 2)")
