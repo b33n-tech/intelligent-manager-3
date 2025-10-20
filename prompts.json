@@ -6,7 +6,7 @@
   },
   "sequencage": {
     "title": "Séquençage et digestion (Step 2)",
-    "instructions": "À partir des fiches produites à l'étape 1, hiérarchise, ordonne et optimise toutes les actions et contraintes. Prends en compte les modifications et contraintes contextuelles pour réévaluer le plan. Génère :\n- Actions à exécuter\n- Actions mises en standby ou modifiées\n- Contraintes contextuelles\n- Jalons clés et recommandations d'exécution\nSois concis, style log de mission, prêt à copier dans un .txt.",
-    "output_format": "---\n1️⃣ Synthèse opérationnelle\n2️⃣ Séquençage logique\n3️⃣ Optimisation & simplification\n4️⃣ Jalons clés\n5️⃣ Recommandation d’exécution\n---"
+    "instructions": "À partir des fiches produites à l'étape 1, hiérarchise et optimise toutes les actions et contraintes. Ignore tout résumé ou synthèse. Découpe toutes les actions en micro-actions, de façon à ce qu'elles soient immédiatement exécutables. Prends en compte les modifications et contraintes contextuelles pour réévaluer le plan.\n\nGénère :\n- Liste complète des actions détaillées et micro-actions\n- Actions mises en standby ou modifiées\n- Contraintes contextuelles\n- Jalons clés (points de bascule, livrables)\n- Recommandations d'exécution si nécessaire\n\nSois concis, style log de mission, prêt à copier dans un .txt.",
+    "output_format": "---\n1️⃣ Séquence d'actions micro détaillées :\nN° action / Description / Type (action, modification, contrainte) / Dépendances / Notes\n...\n2️⃣ Jalons clés :\nN° jalon / Description / Actions concernées\n---"
   }
 }
